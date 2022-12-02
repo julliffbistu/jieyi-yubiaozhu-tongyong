@@ -1,0 +1,62 @@
+#VS2019
+#pytorch 1.8.1
+#torchvision 0.9.1
+
+conda create -n swinseg python=3.8
+conda activate swinseg
+conda install pytorch=1.8 torchvision cudatoolkit=10.2 -c pytorch
+
+pip install cython matplotlib opencv-python==4.5.1.48
+
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\bin\Hostx86\x64
+
+注意是vs2019  中间版本号可能不同 但是一定要Hostx86/x64的cl.exe
+把cl.exe路径添加到系统环境变量并移至最上层 cuda10.2高于10.1.10.0
+
+cmd set Path=C
+cmd cl查看
+
+
+打开anaconda power shell
+配置过程中注意不要开启VPN
+1、安装mmcv
+    cd mmcv-1.2.7
+    pip install -r .\requirements.txt
+
+    $env:TORCH_CUDA_ARCH_LIST="6.1"
+    $env:MMCV_WITH_OPS = 1
+    $env:MAX_JOBS = 4
+    
+    python setup.py build_ext
+    python setup.py develop
+
+2、安装swin segmentation
+   这是在swin segmentation目录下
+   pip install -r requirements.txt
+   pip install -e . --user
+
+#验证
+下载权重 demo/image_demo.py 修改--img --config --checkpoint路径 并运行
+   
+#训练自己数据集
+
+1、在tool/data文件夹下按照VOC格式准备数据集 并运行voc.py
+2、configs/_base_/datasets/pascal_voc12.py修改
+   data_root
+3、mmseg/datasets/voc.py修改
+   CLASSES PALETTE
+4、tool/train修改--config --work-dir --load_from
+5、config/_base_/models文件夹下对应的upernet_swin.py
+   修改norm_cfg SyncBN->SyncBN
+   修改num_classes 2处
+6、config/swin文件夹下对应的在train设置的--config模型
+   修改_base_中 '../_base_/datasets/ade20k.py'->'../_base_/datasets/pascal_voc12.py'
+   修改所有num_classes
+   修改data['samples_per_gpu']
+   
+预训练权重文件优先选择训练图片尺寸的大小
+
+#预测
+1.mask预测pre_mask.py修改相关路径并运行
+2.视频或者摄像头预测 video_inference.py修改相关路径并运行 若要导出视频 则img2video.py修改相关参数并运行
+3.图片预测（参考验证）

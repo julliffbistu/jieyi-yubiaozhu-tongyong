@@ -1,0 +1,4 @@
+{"network_type": 1,
+  "load_size": "512,512",
+  "label": "[{\"class_name\":\"background\",\"class_value\":0,\"class_title\":\"背景\",\"class_color\":\"0,0,0\"},{\"class_name\":\"water\",\"class_value\":255,\"class_title\":\"水域\",\"class_color\":\"255,0,0\"}]",
+  "gpu_num": "1"}
